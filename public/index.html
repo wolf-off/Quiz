@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Welcome to Firebase Hosting</title>
+
+  <!-- update the version number as needed -->
+  <script defer src="/__/firebase/7.0.0/firebase-app.js"></script>
+  <!-- include only the Firebase features as you need -->
+  <script defer src="/__/firebase/7.0.0/firebase-auth.js"></script>
+  <script defer src="/__/firebase/7.0.0/firebase-database.js"></script>
+  <script defer src="/__/firebase/7.0.0/firebase-messaging.js"></script>
+  <script defer src="/__/firebase/7.0.0/firebase-storage.js"></script>
+  <script defer src="/__/firebase/7.0.0/firebase-functions.js"></script>
+  <!-- initialize the SDK after all desired features are loaded -->
+  <script defer src="/__/firebase/init.js"></script>
+
+  <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script> -->
+
+  <link href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css" rel="stylesheet">
+  <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
+  <link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      font-family: 'Montserrat', sans-serif;
+      font-style: normal;
+    }
+
+    .mdc-form-field {
+      font-family: 'Montserrat', sans-serif;
+      font-style: normal;
+      letter-spacing: normal;
+    }
+
+    section {
+      border-radius: 0 0 10px 10px;
+      padding: 20px;
+      background: white;
+    }
+
+    section h1 {
+      font-weight: 600;
+      font-size: 28px;
+      line-height: 34px;
+    }
+
+    section.blue {
+      background: linear-gradient(265.78deg, #2856A8 6.64%, #1C63E1 101.46%);
+      color: white;
+      height: 170px;
+    }
+
+    section.blue h1 {
+      top: 100px;
+      position: relative;
+    }
+
+    #accept-page section.blue {
+      height: 120px;
+    }
+
+    #accept-page section.blue h1 {
+      top: 20px;
+    }
+
+    label {
+      color: #1D62DC;
+    }
+
+    label.form-check-label {
+      color: black;
+    }
+
+    .mdc-floating-label,
+    .mdc-text-field__input {
+      font-family: 'Montserrat', sans-serif;
+      font-style: normal;
+      font-weight: 500;
+    }
+
+    .mdc-text-field,
+    .mdc-form-field {
+      margin-top: 20px;
+    }
+
+    .mdc-text-field .mdc-floating-label {
+      left: 0;
+    }
+
+    .mdc-text-field--focused:not(.mdc-text-field--disabled) .mdc-floating-label {
+      color: #1D62DC;
+    }
+
+    .mdc-text-field .mdc-text-field__input {
+      color: black;
+      font-size: 20px;
+      line-height: 24px;
+      height: 30px;
+      margin-top: 16px;
+    }
+
+    .mdc-line-ripple {
+      bottom: 9px;
+      background-color: #2856A8;
+    }
+
+    .mdc-checkbox__native-control~.mdc-checkbox__background {
+      background: transparent !important;
+      border: 1px solid #2856A8;
+      border-radius: 5px;
+      width: 28px;
+      height: 28px;
+      top: 6px;
+      left: 6px;
+      padding: 0;
+    }
+
+    .mdc-checkbox__native-control:enabled:checked~.mdc-checkbox__background div {
+      width: 18px;
+      height: 18px;
+      border-radius: 3px;
+      background: #2856A8;
+      margin: 0;
+      padding: 1px;
+    }
+
+    .mdc-checkbox~label {
+      color: black;
+    }
+
+    .mdc-checkbox~label a {
+      color: #1D62DC;
+      text-decoration: underline;
+    }
+
+    .start-state button.mdc-button,
+    .accept-state button.mdc-button,
+    .init-state button.mdc-button {
+      background: linear-gradient(254.52deg, #2856A8 6.64%, #1C63E1 101.46%);
+      width: 100%;
+      height: 56px;
+      font-size: 20px;
+      margin-top: 20px;
+      text-transform: none !important;
+      font-family: 'Montserrat', sans-serif;
+      font-style: normal;
+      font-weight: normal;
+      letter-spacing: normal;
+    }
+
+    .q1-state button.mdc-button {
+      background: white;
+      width: 100%;
+      font-family: Montserrat;
+      font-style: normal;
+      font-weight: 500;
+      font-size: 16px;
+      line-height: 20px;
+      color: rgba(10, 10, 10, 0.5);
+      margin: 10px 0;
+      background: #FFFFFF;
+      box-shadow: 0px 2px 15px rgba(40, 42, 55, 0.31);
+      text-transform: none;
+      letter-spacing: normal;
+      height: auto;
+      padding: 8px;
+    }
+
+    button.mdc-button svg {
+      vertical-align: middle;
+      margin-left: 18px;
+    }
+
+    section.black {
+      background: #282A37;
+      position: relative;
+      top: -10px;
+      z-index: -1;
+      padding-top: 30px;
+      color: white;
+    }
+
+    .page {
+      display: none;
+    }
+
+    .start-state #start {
+      display: block;
+    }
+
+    .init-state #registration {
+      display: block;
+    }
+
+    .accept-state #accept-page {
+      display: block;
+    }
+
+    .init-state #code-block {
+      display: none;
+    }
+
+    .init-state.canEnterCode #code-block {
+      display: block;
+    }
+
+    .init-state #send-block {
+      display: none;
+    }
+
+    .init-state.canSendSms #send-block {
+      display: block;
+    }
+
+    .q1-state #questions {
+      display: block;
+    }
+
+    .result-state #result {
+      display: block;
+    }
+
+    .timeout-state #timeout {
+      display: block;
+    }
+  </style>
+
+  <style>
+    body {
+      margin: 0px;
+    }
+
+    .mdc-floating-label--float-above {
+      top: 20px !important;
+    }
+  </style>
+
+  <style>
+    #loading {
+      background: rgba(0, 0, 0, 0.5);
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      display: none;
+    }
+
+    #loading.active {
+      display: block;
+    }
+
+    #loading>div {
+      text-align: center;
+      top: 50%;
+      position: relative;
+    }
+
+    .lds-circle {
+      display: inline-block;
+      transform: translateZ(1px);
+    }
+
+    .lds-circle>div {
+      display: inline-block;
+      width: 51px;
+      height: 51px;
+      margin: 6px;
+      border-radius: 50%;
+      background: #fff;
+      animation: lds-circle 2.4s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+    }
+
+    @keyframes lds-circle {
+      0%,
+      100% {
+        animation-timing-function: cubic-bezier(0.5, 0, 1, 0.5);
+      }
+      0% {
+        transform: rotateY(0deg);
+      }
+      50% {
+        transform: rotateY(1800deg);
+        animation-timing-function: cubic-bezier(0, 0.5, 0.5, 1);
+      }
+      100% {
+        transform: rotateY(3600deg);
+      }
+    }
+  </style>
+</head>
+
+<body class="start-state" style="overflow:hidden">
+
+  <div style="overflow:auto; position:absolute; top: 0; left:0; right:0; bottom:0">
+
+    <div id="start" class="page">
+      <section>
+        <div style="font-weight: 600;font-size: 40px;">Привет,</div>
+        <div style="font-weight: 500;font-size: 28px;">Прими участие в битве платформ
+          <b>Android</b> и
+          <b>IOS</b>
+        </div>
+        <div style="font-weight: normal;font-size: 20px; margin-top:20px">Ты в команде
+          <b>
+            <span id="type2">Android</span>
+          </b>
+          <div>
+            Ответь на 5 простых вопросов чтобы помочь своей команде, но сначала:
+          </div>
+        </div>
+        <button class="mdc-button mdc-button--raised" id="gotoInit" fullWidth>
+          <span class="mdc-button__label">Регистрация</span>
+        </button>
+      </section>
+    </div>
+
+    <div id="registration" class="page">
+      <section class="blue">
+        <h1>
+          Регистрация
+        </h1>
+      </section>
+      <section>
+        <div class="mdc-text-field mdc-text-field--fullwidth">
+          <input type="text" class="mdc-text-field__input " aria-label="Имя" id="name">
+          <label for="name" class="mdc-floating-label ">Имя</label>
+          <div class="mdc-line-ripple"></div>
+        </div>
+        <div class="mdc-text-field mdc-text-field--fullwidth">
+          <input type="tel" class="mdc-text-field__input" aria-label="Телефон" id="phone" pattern="\+7([0-9]{3}) [0-9]{3} [0-9]{2} [0-9]{2}">
+          <label for="phone" class="mdc-floating-label ">Телефон</label>
+          <div class="mdc-line-ripple"></div>
+        </div>
+        <div class="mdc-form-field">
+          <div class="mdc-checkbox">
+            <input type="checkbox" class="mdc-checkbox__native-control" id="accept" />
+            <div class="mdc-checkbox__background">
+              <div></div>
+            </div>
+          </div>
+          <label for="accept">Согласен на использование персональных данных с целью анкетирования и для
+            <a id="acceptLink">участия в розыгрыше призов</a>. Мы не передаем персональные данные третьим лицам
+          </label>
+        </div>
+        <div id="code-block">
+          <div class="mdc-text-field mdc-text-field--fullwidth">
+            <input type="number" class="mdc-text-field__input" aria-label="Код из СМС" id="code">
+            <label for="code" class="mdc-floating-label ">Код из СМС</label>
+            <div class="mdc-line-ripple"></div>
+          </div>
+          <button class="mdc-button mdc-button--raised" id="sendCode" fullWidth>
+            <span class="mdc-button__label">Подтвердить</span>
+          </button>
+        </div>
+        <div id="send-block">
+          <button class="mdc-button mdc-button--raised" id="sendSms" fullWidth>
+            <span class="mdc-button__label">Пришлите мне код</span>
+            <span>
+              <svg width="24" height="15" viewBox="0 0 24 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0 0V15H24V0H0ZM13.0124 7.92188C12.4164 8.38934 11.5836 8.38934 10.9876 7.92188L2.67938 1.40625H21.3206L13.0124 7.92188ZM8.21063 7.53113L1.40625 12.0485V2.19489L8.21063 7.53113ZM9.37628 8.44519L10.1197 9.02838C10.6734 9.46252 11.3366 9.6795 12 9.6795C12.6632 9.6795 13.3268 9.46252 13.8801 9.02838L14.6237 8.44519L22.3786 13.5938H1.6214L9.37628 8.44519ZM15.7894 7.53113L22.5938 2.19489V12.0485L15.7894 7.53113Z"
+                  fill="white" />
+              </svg>
+            </span>
+          </button>
+        </div>
+      </section>
+    </div>
+
+    <div id="accept-page" class="page">
+      <section class="blue">
+        <h1>Правила участия:</h1>
+      </section>
+      <section>
+        <ul>
+          <li>
+            Выбери команду (Android или iOS), ответь на 5 простых вопросов и получи шанс выиграть умную колонку, беспроводные наушники
+            или фитнес браслет</li>
+          <li>Ответы принимаются до
+            <span id="acceptTime">18:00</span>
+          </li>
+          <li>Ответы принимаются один раз, поддержать можно только одну команду</li>
+          <li>За каждый правильный ответ твоя команда получит один балл</li>
+          <li>Призы будут разыграны среди участников победившей команды</li>
+          <li>Призы разыгрываются случайным образом</li>
+          <li>Шанс выиграть призы есть абсолютно у каждого участника команды</li>
+          <li>Вероятность выиграть призы пропорциональна вкладу участника в общий балл команды. Чем больше правильных ответов
+            - тем больше шанс</li>
+        </ul>
+
+        <button class="mdc-button mdc-button--raised" id="acceptBack" fullWidth>
+          <span class="mdc-button__label">Вернуться обратно</span>
+        </button>
+      </section>
+    </div>
+
+    <div id="questions" class="page">
+      <section style="text-align:center;">
+        <label>
+          <span style="vertical-align: middle; margin:0 8px;">
+            <svg width="23" height="24" viewBox="0 0 23 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M21.3542 6.50095C21.1426 6.31265 20.8206 6.32088 20.6181 6.51888C20.412 6.72027 20.4003 7.04753 20.5796 7.27303C22.1281 9.22006 22.9583 11.7229 22.6808 14.4136C22.1904 19.1697 18.1886 22.9923 13.2462 23.4296C7.77769 23.9135 3.0631 20.3204 2.00814 15.4496C1.88418 14.8772 1.40001 14.4334 0.814385 14.4334C0.188395 14.4334 -0.202844 13.7808 0.110171 13.2588L2.41303 9.41866C2.72605 8.89668 3.50845 8.89672 3.82142 9.41869L6.12377 13.2589C6.43678 13.7809 6.04554 14.4335 5.41955 14.4335C4.94683 14.4335 4.58135 14.8548 4.70655 15.3106C5.68546 18.875 9.31693 21.4116 13.4358 20.8302C16.7283 20.3655 19.399 17.864 19.9587 14.7051C20.7963 9.97699 17.0182 5.86199 12.2609 5.86199C10.7182 5.86199 9.22918 6.29299 7.95008 7.1093C7.35647 7.48809 6.5336 7.41315 6.09812 6.87058C5.62391 6.27987 5.772 5.43652 6.40428 5.02535C7.58533 4.25702 8.90224 3.7367 10.2854 3.48278C10.6695 3.41226 10.9622 3.08639 10.9622 2.69585C10.9622 2.27002 10.617 1.92481 10.1912 1.92481H9.89544C9.52837 1.92481 9.23085 1.6383 9.23085 1.28482V0.639992C9.23085 0.286551 9.52845 0 9.89544 0H14.8426C15.2096 0 15.5072 0.286551 15.5072 0.639992V1.28482C15.5072 1.63826 15.2096 1.92481 14.8426 1.92481H14.4506C14.0181 1.92481 13.6676 2.27537 13.6676 2.70781C13.6676 3.10124 13.9604 3.43048 14.3465 3.50601C16.0208 3.8335 17.5506 4.54753 18.8327 5.54552C19.0269 5.69667 19.3041 5.68773 19.4801 5.51572C19.6778 5.32248 19.6703 5.00218 19.4638 4.81835L19.3503 4.71729C19.0808 4.47741 19.0642 4.07246 19.3134 3.81291L19.8435 3.2606C20.0926 3.00101 20.5131 2.9851 20.7826 3.22501L22.7865 5.00871C23.0561 5.24862 23.0726 5.65353 22.8235 5.91308L22.2934 6.46536C22.0442 6.7249 21.6237 6.74086 21.3542 6.50095ZM13.7146 12.0527C12.7952 11.1487 11.2139 11.2469 10.4387 12.3622C9.97334 13.0317 9.98047 13.9366 10.4506 14.6029C11.4387 16.0034 13.6951 16.0315 15.0437 17.0893L15.5569 17.4919C16.0675 17.8924 16.7444 17.2465 16.3331 16.7511L15.6539 15.9331C14.7479 14.8419 14.7259 13.0471 13.7146 12.0527Z"
+                fill="url(#paint0_linear)" />
+              <defs>
+                <linearGradient id="paint0_linear" x1="21.0936" y1="-7.75459" x2="-1.58068" y2="-6.83322" gradientUnits="userSpaceOnUse">
+                  <stop stop-color="#2856A8" />
+                  <stop offset="1" stop-color="#1C63E1" />
+                </linearGradient>
+              </defs>
+            </svg>
+          </span>
+          <span style="vertical-align: middle; margin:0 8px;font-weight: 500;font-size: 20px;">Время пошло</span>
+          <span style="vertical-align: middle; margin:0 8px;font-weight: 600;font-size: 28px;" id="timeCounter">34</span>
+        </label>
+      </section>
+      <section class="black">
+        <div style="font-weight: 600;font-size: 16px;">
+          <span style="color:rgba(255, 255, 255, 0.7)">Вопрос</span>
+          <span id="questionCounter">2</span> из
+          <span id="totalQuestions">5</span>
+        </div>
+        <div id="question-body" style="font-weight: normal;font-size: 20px; margin:10px 0">Loading...</div>
+      </section>
+      <section>
+        <div style="text-align:center;font-weight: 500;font-size: 20px">Выбери ответ</div>
+        <div>
+          <button id="answer-0" onclick="answer(0)" class="mdc-button">Loading...</button>
+          <button id="answer-1" onclick="answer(1)" class="mdc-button">Loading...</button>
+          <button id="answer-2" onclick="answer(2)" class="mdc-button">Loading...</button>
+          <button id="answer-3" onclick="answer(3)" class="mdc-button">Loading...</button>
+        </div>
+      </section>
+    </div>
+
+    <div id="result" class="page">
+      <section>
+        <div style="font-weight: 600;font-size: 40px;">Спасибо</div>
+        <div style="font-weight: 500;font-size: 28px;">это было великолепно!</div>
+        <div style="font-weight: normal;font-size: 20px; margin-top:20px">Твои ответы принесли команде
+          <span id="type">Android</span>
+        </div>
+        <div style="font-weight: 500;font-size: 28px;">
+          <span id="score">Loading...</span>
+          <span>
+            <svg width="22" height="28" viewBox="0 0 22 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M4.68684 25.4697C3.40165 24.0093 2.11652 22.4905 1.29865 20.6795C0.480832 18.7518 0.247147 16.532 0.656082 14.429C1.06502 12.3259 1.99965 10.3398 3.34327 8.6457C3.22645 10.1061 3.7522 11.6249 4.74527 12.7349C4.16108 9.93088 5.09577 6.89319 6.96509 4.67338C8.8344 2.45356 11.4048 0.993066 14.0919 0C12.7483 1.402 12.5731 3.62182 13.0988 5.49119C13.6246 7.36051 14.7345 8.9962 15.7276 10.6903C16.7207 12.3843 17.6553 14.1368 17.7138 16.0646C18.2395 15.0715 18.8237 14.0784 19.1742 12.9685C19.5247 11.8586 19.7 10.6903 19.4079 9.58033C20.4594 10.8655 21.0436 12.1506 21.3357 13.7863C21.6277 15.422 21.5693 17.1161 21.3941 18.7518C21.1604 20.5627 20.6931 22.432 19.7 23.9508C18.5317 25.7618 16.6623 27.0469 14.6178 27.7479C10.9958 28.3905 7.4324 27.8648 4.68684 25.4697Z"
+                fill="#F3705A" />
+              <path d="M9.12714 27.6311C13.9173 29.5005 18.649 23.834 16.0203 19.4528C16.0203 19.3943 15.9619 19.3943 15.9619 19.336C16.1955 21.731 15.6114 23.4835 14.5014 24.4767C15.0856 23.0747 14.6767 21.439 13.9757 20.037C13.2747 18.6934 12.2816 17.4666 11.5222 16.1815C10.7627 14.8379 10.1786 13.319 10.5291 11.8002C9.12709 12.8517 8.13402 14.429 7.72509 16.123C7.31615 17.8171 7.54984 19.6865 8.30927 21.2637C7.43302 20.6212 6.79046 19.5696 6.73202 18.4597C5.79733 19.5696 5.2132 21.03 5.27158 22.4905C5.27164 24.7687 7.08252 26.8133 9.12714 27.6311Z"
+                fill="#FFD15C" />
+            </svg>
+          </span>
+        </div>
+        <div style="font-weight: normal;font-size: 20px; margin:20px 0;">
+          Текст для пояснения почему юзер молодец и так лихо ответил правильно на все пять вопросов. Очень большой молодец, так держать
+        </div>
+        <div style="background: linear-gradient(266.67deg, #2856A8 6.64%, #1C63E1 101.46%);border-radius: 10px; padding:10px;font-weight: normal;font-size: 20px;color:white">
+          <div style="margin-bottom:20px;">
+            <svg width="99" height="99" viewBox="0 0 99 99" fill="none" xmlns="http://www.w3.org/2000/svg" style="position:absolute; margin:2px 0">
+              <g clip-path="url(#clip0)">
+                <path d="M52.4641 36.6212H49.5637L47.501 51.5628L49.5637 65.9998H52.4641V36.6212Z" fill="#ACACAC" />
+                <path d="M46.6641 36.6212H49.5645V66.0005H46.6641V36.6212Z" fill="#BFBFBF" />
+                <path d="M68.0615 62.3259H49.564L45.4385 73.8119L49.564 90.7498H68.0615V62.3259Z" fill="#FF9900" />
+                <path d="M31.0654 62.3259H49.5637V90.7498H31.0654V62.3259Z" fill="#FFB62D" />
+                <path d="M75.1514 96.293C75.1514 90.962 70.8144 86.625 65.4834 86.625H49.5637L47.501 92.8125L49.5637 99H75.1514V96.293Z"
+                  fill="#6E6E6E" />
+                <path d="M33.6436 86.625C28.3133 86.625 23.9756 90.962 23.9756 96.293V99H49.564V86.625H33.6436Z" fill="#838383" />
+                <path d="M76.311 21.2688L74.7498 16.4635L59.6549 13.4136L52.0905 0H49.564L45.4385 26.8128L49.564 44.4719L63.5682 50.8769L67.6559 47.9071L65.8915 32.6082L76.311 21.2688Z"
+                  fill="#FFC94A" />
+                <path d="M47.0377 0L39.4725 13.4136L24.3776 16.4635L22.8164 21.2688L33.2359 32.6082L31.4715 47.9071L35.5592 50.8769L49.5642 44.4719V0L47.0377 0Z"
+                  fill="#FFD466" />
+                <path d="M68.56 21.1306L55.9063 18.5739L49.564 7.3288L45.4385 26.8128L49.564 38.0933L61.3045 43.4628L59.8256 30.6377L68.56 21.1306Z"
+                  fill="#FF9900" />
+                <path d="M43.2218 18.5739L30.5674 21.1306L39.3025 30.6377L37.8236 43.4628L49.5642 38.0933V7.3288L43.2218 18.5739Z" fill="#FFB62D"
+                />
+              </g>
+              <defs>
+                <clipPath id="clip0">
+                  <rect width="99" height="99" fill="white" />
+                </clipPath>
+              </defs>
+            </svg>
+            <div style="min-height:100px; margin: 10px 0 0 100px;">Не забудь, что также мы разыгрываем ценные призы среди участников опроса.</div>
+          </div>
+          <div style="font-weight: 600;font-size: 16px; margin:10px">
+            <a href="https://www.google.com/search?q=where+is+link%3F" style="color:white">Условия проведения конкурса</a> можно узнать по ссылке или на
+            <b>стойке HR</b>
+          </div>
+        </div>
+
+      </section>
+    </div>
+
+    <div id="timeout" class="page">
+      <section>
+        Принять участие в Битве можно только один раз.
+        <br/> Приходи в
+        <span id="finishTime">18:00</span> на стенд MERA, чтобы узнать результаты и принять участие в розыгрыше призов.
+      </section>
+    </div>
+  </div>
+
+  <div id="loading" class="active">
+    <div>
+      <div class="lds-circle">
+        <div></div>
+      </div>
+    </div>
+  </div>
+  <script src="https://code.jquery.com/jquery-1.10.0.min.js"></script>
+  <script src="https://rawgit.com/RobinHerbots/Inputmask/5.x/dist/jquery.inputmask.js"></script>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+
+      var selector = document.getElementById("#phone");  
+      var im = new Inputmask("99-9999999"); 
+      im.mask("phone");
+
+      document.querySelectorAll('.mdc-text-field').forEach(element => {
+        const textField = new mdc.textField.MDCTextField(element);
+      });
+      document.querySelectorAll('.mdc-checkbox').forEach(element => {
+        const textField = new mdc.checkbox.MDCCheckbox(element);
+      });
+      document.querySelectorAll('.mdc-form-field').forEach(element => {
+        const textField = new mdc.formField.MDCFormField(element);
+      });
+      document.querySelectorAll('.mdc-button').forEach(element => {
+        const textField = new mdc.ripple.MDCRipple(element);
+      });
+
+      var gotoPage = function (page) {
+        const pages = ["start-state", "init-state", "accept-state", "q1-state", "result-state", "timeout-state"];
+        pages.forEach(c => {
+          document.querySelector("body").classList.remove(c);
+        });
+        document.querySelector("body").classList.add(page);
+      }
+
+      hideLoading = function () {
+        document.querySelector("#loading").classList.remove("active");
+      }
+      showLoading = function () {
+        document.querySelector("#loading").classList.add("active");
+      }
+      showLoading();
+
+
+      document.querySelector("#gotoInit").addEventListener("click", (e) => {
+        gotoPage("init-state");
+      });
+
+      var verifySendSms = function () {
+        var name = document.querySelector("#name").value;
+        var phone = document.querySelector("#phone").value;
+        var accept = document.querySelector("#accept").checked;
+        if (name && phone && accept) {
+          document.querySelector("body").classList.add("canSendSms")
+        } else {
+          document.querySelector("body").classList.remove("canSendSms");
+        }
+      }
+      document.querySelector("#name").addEventListener("keyup", () => {
+        verifySendSms();
+      });
+      document.querySelector("#phone").addEventListener("keyup", () => {
+        verifySendSms();
+      });
+      document.querySelector("#accept").addEventListener("click", () => {
+        verifySendSms();
+      });
+
+      document.querySelector("#acceptLink").addEventListener("click", (e) => {
+        gotoPage("accept-state");
+        e.stopPropagation();
+      });
+      document.querySelector("#acceptBack").addEventListener("click", (e) => {
+        gotoPage("init-state");
+      });
+
+
+      document.querySelector("#sendSms").addEventListener("click", () => {
+        var phone = document.querySelector('#phone').value;
+        var appVerifier = window.recaptchaVerifier;
+        showLoading();
+        firebase.auth().signInWithPhoneNumber(phone, appVerifier)
+          .then(function (confirmationResult) {
+            hideLoading();
+            window.confirmationResult = confirmationResult;
+            document.querySelector("body").classList.add("canEnterCode");
+          }).catch(function (error) {
+            hideLoading();
+            alert("Epic fail");
+          });
+      })
+      window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('sendSms', {
+        'size': 'invisible',
+        'callback': function (response) {
+        }
+      });
+
+      var getQuestions = () => {
+        showLoading();
+        var name = document.querySelector('#name').value;
+        firebase.functions().httpsCallable('getQuestions')({ type, name: name }).then(function (result) {
+          hideLoading();
+          if (result.data.questions.length == 0) {
+            gotoPage("timeout-state");
+          } else {
+            gotoPage("q1-state");
+            questions = result.data.questions;
+            document.showQuestion(0);
+
+            const time = Date.now();
+            const maxTime = 60 * 5;
+            let timer = setInterval(() => {
+              let seconds = maxTime - ~~((Date.now() - time) / 1000);
+              if (seconds >= 0) {
+                document.querySelector('#timeCounter').innerHTML = seconds;
+              }
+              else {
+                clearInterval(timer);
+                gotoPage("timeout-state");
+              }
+            }, 1000);
+          }
+        }).catch(function (error) {
+          alert('Epic fail');
+          hideLoading();
+        });
+      };
+
+      document.querySelector("#sendCode").addEventListener("click", () => {
+        showLoading();
+        confirmationResult.confirm(document.querySelector('#code').value).then(function (result) {
+          hideLoading();
+          getQuestions();
+        }).catch(function (error) {
+          hideLoading();
+          alert('Wrong code');
+        });
+      });
+
+      type = window.location.href.indexOf('ios') > 0 ? 'ios' : 'android';
+      questions = [];
+      userAnswers = [];
+      currentQuestionIndex = 0;
+
+      if (type == "ios") {
+        document.querySelector("#type").innerHTML = "IOS";
+        document.querySelector("#type2").innerHTML = "IOS";
+      } else {
+        document.querySelector("#type").innerHTML = "Android";
+        document.querySelector("#type2").innerHTML = "Android";
+      }
+
+      firebase.functions().httpsCallable('check')({}).then(function (result) {
+        hideLoading();
+        document.querySelector("#finishTime").innerHTML = result.data.finishTime;
+        document.querySelector("#acceptTime").innerHTML = result.data.acceptTime;
+        if (result.data.has) {
+          if (document.querySelector("body").classList.contains("start-state")) {
+            getQuestions();
+          }
+        }
+      }).catch(() => {
+        hideLoading();
+      });
+
+      document.showQuestion = function (questionIndex) {
+        currentQuestionIndex = questionIndex;
+        document.querySelector("#question-body").innerHTML = questions[questionIndex].body;
+        document.querySelector("#answer-0").innerHTML = questions[questionIndex].answers[0];
+        document.querySelector("#answer-1").innerHTML = questions[questionIndex].answers[1];
+        document.querySelector("#answer-2").innerHTML = questions[questionIndex].answers[2];
+        document.querySelector("#answer-3").innerHTML = questions[questionIndex].answers[3];
+        document.querySelector("#questionCounter").innerHTML = questionIndex + 1;
+        document.querySelector("#totalQuestions").innerHTML = questions.length;
+      }
+
+      document.answer = function (index) {
+        userAnswers.push(index);
+        if (questions.length == currentQuestionIndex + 1) {
+          gotoPage("result-state");
+
+          var functions = firebase.functions();
+          var addMessage = firebase.functions().httpsCallable('addResult');
+          showLoading();
+          addMessage({ answers: userAnswers, type: type }).then(function (result) {
+            hideLoading();
+            let score = result.data;
+            if (score == 5 || score == 0) {
+              score += ' очков';
+            } else if (score == 1) {
+              score += ' очко';
+            } else {
+              score += ' очка';
+            }
+            document.querySelector("#score").innerHTML = score;
+          }).catch(function (error) {
+            alert('Epic fail');
+            hideLoading();
+          });
+        } else {
+          document.showQuestion(currentQuestionIndex + 1);
+        }
+      }
+
+    });
+  </script>
+</body>
+
+</html>
