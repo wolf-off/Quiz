@@ -167,3 +167,13 @@ exports.check = functions.https.onCall(async (data, context) => {
 
     return { has, acceptTime, finishTime };
 });
+
+exports.hr = functions.https.onCall(async (data, context) => {
+
+    let winners: any = [];
+    await admin.database().ref('/winners').once('value').then((snapshot) => {
+        winners = snapshot.val();
+    });
+
+    return { winners };
+});

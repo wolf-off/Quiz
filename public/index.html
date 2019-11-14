@@ -336,7 +336,7 @@
           <div class="mdc-line-ripple"></div>
         </div>
         <div class="mdc-text-field mdc-text-field--fullwidth">
-          <input type="tel" class="mdc-text-field__input" aria-label="Телефон" id="phone" pattern="\+7([0-9]{3}) [0-9]{3} [0-9]{2} [0-9]{2}">
+          <input type="tel" class="mdc-text-field__input" aria-label="Телефон" id="phone">
           <label for="phone" class="mdc-floating-label ">Телефон</label>
           <div class="mdc-line-ripple"></div>
         </div>
@@ -444,6 +444,7 @@
       <section>
         <div style="font-weight: 600;font-size: 40px;">Спасибо</div>
         <div style="font-weight: 500;font-size: 28px;">это было великолепно!</div>
+        <div style="font-weight: normal;font-size: 20px; margin-top:20px" id='timeout-message'></div>
         <div style="font-weight: normal;font-size: 20px; margin-top:20px">Твои ответы принесли команде
           <span id="type">Android</span>
         </div>
@@ -459,7 +460,6 @@
           </span>
         </div>
         <div style="font-weight: normal;font-size: 20px; margin:20px 0;">
-          Текст для пояснения почему юзер молодец и так лихо ответил правильно на все пять вопросов. Очень большой молодец, так держать
         </div>
         <div style="background: linear-gradient(266.67deg, #2856A8 6.64%, #1C63E1 101.46%);border-radius: 10px; padding:10px;font-weight: normal;font-size: 20px;color:white">
           <div style="margin-bottom:20px;">
@@ -490,7 +490,7 @@
             <div style="min-height:100px; margin: 10px 0 0 100px;">Не забудь, что также мы разыгрываем ценные призы среди участников опроса.</div>
           </div>
           <div style="font-weight: 600;font-size: 16px; margin:10px">
-            <a href="https://www.google.com/search?q=where+is+link%3F" style="color:white">Условия проведения конкурса</a> можно узнать по ссылке или на
+            <a href="#" id="acceptLink2" style="color:white">Условия проведения конкурса</a> можно узнать по ссылке или на
             <b>стойке HR</b>
           </div>
         </div>
@@ -516,12 +516,12 @@
   </div>
   <script src="https://code.jquery.com/jquery-1.10.0.min.js"></script>
   <script src="https://rawgit.com/RobinHerbots/Inputmask/5.x/dist/jquery.inputmask.js"></script>
-  
+
   <script>
     document.addEventListener('DOMContentLoaded', function () {
 
-      var selector = document.getElementById("#phone");  
-      var im = new Inputmask("99-9999999"); 
+      var selector = document.getElementById("#phone");
+      var im = new Inputmask("+9(999)-999-9999");
       im.mask("phone");
 
       document.querySelectorAll('.mdc-text-field').forEach(element => {
@@ -560,9 +560,10 @@
 
       var verifySendSms = function () {
         var name = document.querySelector("#name").value;
-        var phone = document.querySelector("#phone").value;
+        if (name) name = name.trim();
+        var phone = document.querySelector("#phone").value.split(' ').join('').split('-').join('').split('(').join('').split(')').join('').split(',').join('');
         var accept = document.querySelector("#accept").checked;
-        if (name && phone && accept) {
+        if (name && phone && accept && phone.indexOf('_') < 0) {
           document.querySelector("body").classList.add("canSendSms")
         } else {
           document.querySelector("body").classList.remove("canSendSms");
@@ -579,27 +580,38 @@
       });
 
       document.querySelector("#acceptLink").addEventListener("click", (e) => {
+        document.wentfrom = "init-state";
+        gotoPage("accept-state");
+        e.stopPropagation();
+      });
+      document.querySelector("#acceptLink2").addEventListener("click", (e) => {
+        document.wentfrom = "result-state";
         gotoPage("accept-state");
         e.stopPropagation();
       });
       document.querySelector("#acceptBack").addEventListener("click", (e) => {
-        gotoPage("init-state");
+        gotoPage(document.wentfrom);
       });
 
 
       document.querySelector("#sendSms").addEventListener("click", () => {
-        var phone = document.querySelector('#phone').value;
-        var appVerifier = window.recaptchaVerifier;
-        showLoading();
-        firebase.auth().signInWithPhoneNumber(phone, appVerifier)
-          .then(function (confirmationResult) {
-            hideLoading();
-            window.confirmationResult = confirmationResult;
-            document.querySelector("body").classList.add("canEnterCode");
-          }).catch(function (error) {
-            hideLoading();
-            alert("Epic fail");
-          });
+        var phone = document.querySelector('#phone').value.split(' ').join('').split('-').join('').split('(').join('').split(')').join('').split(',').join('');
+        if (phone.indexOf('_') < 0) {
+          var appVerifier = window.recaptchaVerifier;
+          showLoading();
+          firebase.auth().signInWithPhoneNumber(phone, appVerifier)
+            .then(function (confirmationResult) {
+              hideLoading();
+              window.confirmationResult = confirmationResult;
+              document.querySelector("body").classList.add("canEnterCode");
+            }).catch(function (error) {
+              hideLoading();
+              alert("Проверьте номер телефона. SMS не отправлена");
+            });
+        } else {
+          hideLoading();
+          alert('Что с номером то?');
+        }
       })
       window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('sendSms', {
         'size': 'invisible',
@@ -610,32 +622,39 @@
       var getQuestions = () => {
         showLoading();
         var name = document.querySelector('#name').value;
-        firebase.functions().httpsCallable('getQuestions')({ type, name: name }).then(function (result) {
-          hideLoading();
-          if (result.data.questions.length == 0) {
-            gotoPage("timeout-state");
-          } else {
-            gotoPage("q1-state");
-            questions = result.data.questions;
-            document.showQuestion(0);
+        if (name) name = name.trim();
+        if (name || !document.querySelector("body").classList.contains("init-state")) {
+          firebase.functions().httpsCallable('getQuestions')({ type, name: name }).then(function (result) {
+            hideLoading();
+            if (result.data.questions.length == 0) {
+              gotoPage("timeout-state");
+            } else {
+              gotoPage("q1-state");
+              questions = result.data.questions;
+              document.showQuestion(0);
 
-            const time = Date.now();
-            const maxTime = 60 * 5;
-            let timer = setInterval(() => {
-              let seconds = maxTime - ~~((Date.now() - time) / 1000);
-              if (seconds >= 0) {
-                document.querySelector('#timeCounter').innerHTML = seconds;
-              }
-              else {
-                clearInterval(timer);
-                gotoPage("timeout-state");
-              }
-            }, 1000);
-          }
-        }).catch(function (error) {
-          alert('Epic fail');
+              const time = Date.now();
+              const maxTime = 60 * 5;
+              let timer = setInterval(() => {
+                let seconds = maxTime - ~~((Date.now() - time) / 1000);
+                if (seconds >= 0) {
+                  document.querySelector('#timeCounter').innerHTML = seconds;
+                }
+                else {
+                  clearInterval(timer);
+                  document.querySelector("#timeout-message") = "Время вышло, но...";
+                  gotoPage("result-state");
+                }
+              }, 1000);
+            }
+          }).catch(function (error) {
+            alert('Похоже над датацентром нависло что-то большое и медное. Попробуй обновить страницу');
+            hideLoading();
+          });
+        } else {
+          alert('Что с именем то случилось?');
           hideLoading();
-        });
+        }
       };
 
       document.querySelector("#sendCode").addEventListener("click", () => {
@@ -687,14 +706,16 @@
       }
 
       document.answer = function (index) {
-        userAnswers.push(index);
+        if (userAnswers.length < questions.length) {
+          userAnswers.push(index);
+        }
         if (questions.length == currentQuestionIndex + 1) {
-          gotoPage("result-state");
 
           var functions = firebase.functions();
           var addMessage = firebase.functions().httpsCallable('addResult');
           showLoading();
           addMessage({ answers: userAnswers, type: type }).then(function (result) {
+            gotoPage("result-state");
             hideLoading();
             let score = result.data;
             if (score == 5 || score == 0) {
@@ -706,7 +727,7 @@
             }
             document.querySelector("#score").innerHTML = score;
           }).catch(function (error) {
-            alert('Epic fail');
+            alert('Что-то пошло не так... Все интернеты выкачались?');
             hideLoading();
           });
         } else {
