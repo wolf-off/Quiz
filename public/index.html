@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Welcome to Firebase Hosting</title>
+  <title>Battle of platforms</title>
 
   <!-- update the version number as needed -->
   <script defer src="/__/firebase/7.0.0/firebase-app.js"></script>
@@ -29,6 +29,10 @@
   <link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
 
   <style>
+    html,body{
+      overflow:hidden;
+    }
+
     body {
       font-family: 'Montserrat', sans-serif;
       font-style: normal;
@@ -44,6 +48,48 @@
       border-radius: 0 0 10px 10px;
       padding: 20px;
       background: white;
+      position: relative;
+      top: 0;
+      -moz-transition: top 0.8s ease, opacity 0.8s;
+      -webkit-transition: top 0.8s ease, opacity 0.8s;
+      -o-transition: top 0.8s ease, opacity 0.8s;
+      transition: top 0.8s ease, opacity 0.8s;
+      z-index: 6;
+      opacity: 1;
+    }
+
+    section:nth-child(1) {
+      -moz-transition: top 0.3s ease, opacity 0.3s;
+      -webkit-transition: top 0.3s ease, opacity 0.3s;
+      -o-transition: top 0.3s ease, opacity 0.3s;
+      transition: top 0.3s ease, opacity 0.3s;
+      z-index: 9;
+    }
+
+    section:nth-child(2) {
+      -moz-transition: top 0.6s ease, opacity 0.6s;
+      -webkit-transition: top 0.6s ease, opacity 0.6s;
+      -o-transition: top 0.6s ease, opacity 0.6s;
+      transition: top 0.6s ease, opacity 0.6s;
+      z-index: 8;
+    }
+
+    section:nth-child(3) {
+      -moz-transition: top 0.8s ease, opacity 0.8s;
+      -webkit-transition: top 0.8s ease, opacity 0.8s;
+      -o-transition: top 0.8s ease, opacity 0.8s;
+      transition: top 0.8s ease, opacity 0.8s;
+      z-index: 7;
+    }
+
+    .out section,
+    #questions.out section:not(:first-child) {
+      -moz-transition: top 0.4s ease, opacity 0.4s;
+      -webkit-transition: top 0.4s ease, opacity 0.4s;
+      -o-transition: top 0.4s ease, opacity 0.4s;
+      transition: top 0.4s ease, opacity 0.4s;
+      top: -300px !important;
+      opacity: 0;
     }
 
     section h1 {
@@ -183,7 +229,7 @@
       background: #282A37;
       position: relative;
       top: -10px;
-      z-index: -1;
+      /* z-index: -1; */
       padding-top: 30px;
       color: white;
     }
@@ -251,11 +297,17 @@
       left: 0;
       height: 100%;
       width: 100%;
-      display: none;
+      opacity: 0;
+      z-index: -10;
+      -moz-transition: z-index 0.3s ease, opacity 0.3s;
+      -webkit-transition: z-index 0.3s ease, opacity 0.3s;
+      -o-transition: z-index 0.3s ease, opacity 0.3s;
+      transition: z-index 0.3s ease, opacity 0.3s;
     }
 
     #loading.active {
-      display: block;
+      z-index: 1000;
+      opacity: 1;
     }
 
     #loading>div {
@@ -298,9 +350,9 @@
   </style>
 </head>
 
-<body class="start-state" style="overflow:hidden">
+<body class="start-state out">
 
-  <div style="overflow:auto; position:absolute; top: 0; left:0; right:0; bottom:0">
+  <div style="overflow:auto; position:absolute; top: 0; left:0; right:0; bottom:0" id="scroll-container">
 
     <div id="start" class="page">
       <section>
@@ -403,7 +455,7 @@
     </div>
 
     <div id="questions" class="page">
-      <section style="text-align:center;">
+      <section style="text-align:center;top:0px !important;">
         <label>
           <span style="vertical-align: middle; margin:0 8px;">
             <svg width="23" height="24" viewBox="0 0 23 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -519,6 +571,11 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', function () {
+      // document.querySelector("body").classList.remove('out');
+      // setTimeout(()=>{
+      // //document.querySelector("body").classList.add('out');
+      //     showLoading();
+      // },4000);
 
       var selector = document.getElementById("#phone");
       var im = new Inputmask("+9(999)-999-9999");
@@ -539,10 +596,16 @@
 
       var gotoPage = function (page) {
         const pages = ["start-state", "init-state", "accept-state", "q1-state", "result-state", "timeout-state"];
-        pages.forEach(c => {
-          document.querySelector("body").classList.remove(c);
-        });
-        document.querySelector("body").classList.add(page);
+        document.querySelector("body").classList.add('out');
+        setTimeout(() => {
+          pages.forEach(c => {
+            document.querySelector("body").classList.remove(c);
+          });
+          document.querySelector("body").classList.add(page);
+          setTimeout(() => {
+            document.querySelector("body").classList.remove('out');
+          }, 100);
+        }, 350);
       }
 
       hideLoading = function () {
@@ -551,8 +614,6 @@
       showLoading = function () {
         document.querySelector("#loading").classList.add("active");
       }
-      showLoading();
-
 
       document.querySelector("#gotoInit").addEventListener("click", (e) => {
         gotoPage("init-state");
@@ -688,21 +749,30 @@
         if (result.data.has) {
           if (document.querySelector("body").classList.contains("start-state")) {
             getQuestions();
+            return;
           }
         }
+        document.querySelector("body").classList.remove('out');
       }).catch(() => {
         hideLoading();
       });
 
       document.showQuestion = function (questionIndex) {
         currentQuestionIndex = questionIndex;
-        document.querySelector("#question-body").innerHTML = questions[questionIndex].body;
-        document.querySelector("#answer-0").innerHTML = questions[questionIndex].answers[0];
-        document.querySelector("#answer-1").innerHTML = questions[questionIndex].answers[1];
-        document.querySelector("#answer-2").innerHTML = questions[questionIndex].answers[2];
-        document.querySelector("#answer-3").innerHTML = questions[questionIndex].answers[3];
-        document.querySelector("#questionCounter").innerHTML = questionIndex + 1;
-        document.querySelector("#totalQuestions").innerHTML = questions.length;
+        if (questionIndex) { document.querySelector("#questions").classList.add("out"); }
+        setTimeout(() => {
+          document.querySelector("#question-body").innerHTML = questions[questionIndex].body;
+          document.querySelector("#answer-0").innerHTML = questions[questionIndex].answers[0];
+          document.querySelector("#answer-1").innerHTML = questions[questionIndex].answers[1];
+          document.querySelector("#answer-2").innerHTML = questions[questionIndex].answers[2];
+          document.querySelector("#answer-3").innerHTML = questions[questionIndex].answers[3];
+          document.querySelector("#questionCounter").innerHTML = questionIndex + 1;
+          document.querySelector("#totalQuestions").innerHTML = questions.length;
+          if (questionIndex) { document.querySelector("#questions").classList.remove("out"); }
+          setInterval(() => {
+            document.querySelector("#scroll-container").scrollTop = 0;
+          }, 300);
+        }, 300);
       }
 
       document.answer = function (index) {
